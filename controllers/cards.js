@@ -91,7 +91,7 @@ const dislikeCard = (req, res) => {
         }
         res.send(card);
       })
-      .catch(() =>
+      .catch(
         res.status(404).send({ message: "Карточка с таким _id не найдена" })
       );
   } else {
