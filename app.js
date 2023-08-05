@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
+const { notFoundStatus } = require('./utils/constants');
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,7 +22,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Такой старницы не существует' });
+  res.status(notFoundStatus).send({ message: 'Такой старницы не существует' });
 });
 
 app.listen(PORT);
