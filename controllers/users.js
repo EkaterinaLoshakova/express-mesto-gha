@@ -1,18 +1,16 @@
-const User = require("../models/user");
+const User = require('../models/user');
 const {
   badRequestStatus,
   notFoundStatus,
   serverErrorStatus,
-} = require("../utils/constants");
+} = require('../utils/constants');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch(() =>
-      res
-        .status(serverErrorStatus)
-        .send({ message: "На сервере произошла ошибка" })
-    );
+    .catch(() => res
+      .status(serverErrorStatus)
+      .send({ message: 'На сервере произошла ошибка' }));
 };
 
 module.exports.getUserById = (req, res) => {
@@ -22,20 +20,20 @@ module.exports.getUserById = (req, res) => {
       if (!user) {
         res
           .status(notFoundStatus)
-          .send({ message: "Пользователь по указанному _id не найден." });
+          .send({ message: 'Пользователь по указанному _id не найден.' });
         return;
       }
       res.send(user);
     })
     .catch((error) => {
-      if (error.name === "CastError") {
+      if (error.name === 'CastError') {
         res
           .status(badRequestStatus)
-          .send({ message: "Некорректный _id карточки" });
+          .send({ message: 'Некорректный _id карточки' });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "Пользователь по указанному _id не найден." });
+          .send({ message: 'Пользователь по указанному _id не найден.' });
       }
     });
   // } else {
@@ -48,12 +46,12 @@ module.exports.addUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(201).send(user))
     .catch((error) => {
-      if (error.name === "ValidationError") {
+      if (error.name === 'ValidationError') {
         res.status(badRequestStatus).send({ message: error.message });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "На сервере произошла ошибка" });
+          .send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -64,16 +62,16 @@ module.exports.editUserData = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: "true", runValidators: true }
+    { new: 'true', runValidators: true },
   )
     .then((user) => res.send(user))
     .catch((error) => {
-      if (error.name === "ValidationError") {
+      if (error.name === 'ValidationError') {
         res.status(badRequestStatus).send({ message: error.message });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "Пользователь по указанному _id не найден." });
+          .send({ message: 'Пользователь по указанному _id не найден.' });
       }
     });
   // } else {
@@ -86,16 +84,16 @@ module.exports.editUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar: req.body.avatar },
-    { new: "true", runValidators: true }
+    { new: 'true', runValidators: true },
   )
     .then((user) => res.send(user))
     .catch((error) => {
-      if (error.name === "ValidationError") {
+      if (error.name === 'ValidationError') {
         res.status(badRequestStatus).send({ message: error.message });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "Пользователь по указанному _id не найден." });
+          .send({ message: 'Пользователь по указанному _id не найден.' });
       }
     });
   // } else {

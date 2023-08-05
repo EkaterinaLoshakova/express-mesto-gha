@@ -2,8 +2,8 @@ const {
   badRequestStatus,
   notFoundStatus,
   serverErrorStatus,
-} = require("../utils/constants");
-const Card = require("../models/card");
+} = require('../utils/constants');
+const Card = require('../models/card');
 
 const createCard = (req, res) => {
   const { name, link } = req.body;
@@ -18,13 +18,13 @@ const createCard = (req, res) => {
       //   );
     })
     .catch((error) => {
-      if (error.name === "ValidationError") {
+      if (error.name === 'ValidationError') {
         res.status(badRequestStatus).send({
           message: error.message,
         });
       } else {
         res.status(serverErrorStatus).send({
-          message: "Произошла ошибка на сервере.",
+          message: 'Произошла ошибка на сервере.',
         });
       }
     });
@@ -32,13 +32,13 @@ const createCard = (req, res) => {
 
 const getCards = (req, res) => {
   Card.find({})
-    .populate(["owner", "likes"])
+    .populate(['owner', 'likes'])
     .then((cards) => {
       res.send(cards);
     })
     .catch(() => {
       res.status(serverErrorStatus).send({
-        message: "Произошла ошибка на сервере.",
+        message: 'Произошла ошибка на сервере.',
       });
     });
 };
@@ -50,20 +50,20 @@ const deleteCard = (req, res) => {
       if (!card) {
         res
           .status(notFoundStatus)
-          .send({ message: "Карточка с таким _id не найдена" });
+          .send({ message: 'Карточка с таким _id не найдена' });
       } else {
-        res.send({ message: "Карточка удалена" });
+        res.send({ message: 'Карточка удалена' });
       }
     })
     .catch((error) => {
-      if (error.name === "CastError") {
+      if (error.name === 'CastError') {
         res
           .status(badRequestStatus)
-          .send({ message: "Некорректный _id карточки" });
+          .send({ message: 'Некорректный _id карточки' });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "Карточки с таким _id нет" });
+          .send({ message: 'Карточки с таким _id нет' });
       }
     });
   // } else {
@@ -76,27 +76,27 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-    .populate(["owner", "likes"])
+    .populate(['owner', 'likes'])
     .then((card) => {
       if (!card) {
         res
           .status(notFoundStatus)
-          .send({ message: "Карточка с таким _id не найдена" });
+          .send({ message: 'Карточка с таким _id не найдена' });
         return;
       }
       res.send(card);
     })
     .catch((error) => {
-      if (error.name === "CastError") {
+      if (error.name === 'CastError') {
         res
           .status(badRequestStatus)
-          .send({ message: "Некорректный _id карточки" });
+          .send({ message: 'Некорректный _id карточки' });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "Карточка с таким _id не найдена!!!!" });
+          .send({ message: 'Карточка с таким _id не найдена!!!!' });
       }
     });
 
@@ -110,27 +110,27 @@ const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
-    .populate(["owner", "likes"])
+    .populate(['owner', 'likes'])
     .then((card) => {
       if (!card) {
         res
           .status(notFoundStatus)
-          .send({ message: "Карточка с таким _id не найдена" });
+          .send({ message: 'Карточка с таким _id не найдена' });
         return;
       }
       res.send(card);
     })
     .catch((error) => {
-      if (error.name === "CastError") {
+      if (error.name === 'CastError') {
         res
           .status(badRequestStatus)
-          .send({ message: "Некорректный _id карточки" });
+          .send({ message: 'Некорректный _id карточки' });
       } else {
         res
           .status(serverErrorStatus)
-          .send({ message: "Карточка с таким _id не найдена" });
+          .send({ message: 'Карточка с таким _id не найдена' });
       }
     });
   // } else {
