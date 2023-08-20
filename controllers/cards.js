@@ -49,9 +49,9 @@ const getCards = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail.then((card) => {
+    .then((card) => {
       if (!card.owner.equals(req.user._id)) {
-        throw new ForbiddenError('Это карточка другого пользователя');
+        throw new ForbiddenError('Карточка другого пользовател');
       }
       Card.deleteOne(card)
         .orFail()
@@ -60,17 +60,27 @@ const deleteCard = (req, res, next) => {
         })
         .catch((error) => {
           if (error instanceof mongoose.Error.DocumentNotFoundError) {
-            next(new NotFoundError('Карточка не найдена.'));
+            next(
+              new NotFoundError(
+                `Карточка с _id: ${req.params.cardId} не найдена.`,
+              ),
+            );
           } else if (error instanceof mongoose.Error.CastError) {
-            next(new BadRequestError('Некорректный _id карточки'));
+            next(
+              new BadRequestError(
+                `Некорректный _id карточки: ${req.params.cardId}`,
+              ),
+            );
           } else {
             next(error);
           }
         });
     })
     .catch((error) => {
-      if (error instanceof mongoose.Error.DocumentNotFoundError) {
-        next(new NotFoundError('Карточка  не найдена.'));
+      if (error.name === 'TypeError') {
+        next(
+          new NotFoundError(`Карточка с _id: ${req.params.cardId} не найдена.`),
+        );
       } else {
         next(error);
       }
