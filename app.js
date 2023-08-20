@@ -33,7 +33,7 @@ app.use('/cards', require('./routes/cards'));
 
 app.use('*', (req, res, next) => {
   // res.status(notFoundStatus).send({ message: "Такой старницы не существует" });
-  next(new NotFoundError('Такой старницы не существует'));
+  next(new NotFoundError({ message: 'Такой старницы не существует' }));
 });
 
 app.use(errors());
