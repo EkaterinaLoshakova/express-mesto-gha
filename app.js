@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 // const { notFoundStatus } = require('./utils/constants');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/NotFoundError');
+const errorHandler = require('./middlewares/error-handler');
 
 const app = express();
 
@@ -32,19 +33,18 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('*', (req, res, next) => {
-  // res.status(notFoundStatus).send({ message: 'Такой старницы не существует' });
   next(new NotFoundError({ message: 'Такой старницы не существует' }));
 });
 
 app.use(errors());
-app.use((error, req, res) => {
-  // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 500, message } = error;
-
-  res.status(statusCode).send({
-    // проверяем статус и выставляем сообщение в зависимости от него
-    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
-  });
-});
+app.use(errorHandler);
+// app.use((error, req, res) => {
+//   // если у ошибки нет статуса, выставляем 500
+//   const { statusCode = 500, message } = error;
+//   res.status(statusCode).send({
+//     // проверяем статус и выставляем сообщение в зависимости от него
+//     message: statusCode === 500 ? "На сервере произошла ошибка" : message,
+//   });
+// });
 
 app.listen(PORT);
