@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-// const { notFoundStatus } = require('./utils/constants');
+const { notFoundStatus } = require('./utils/constants');
 const auth = require('./middlewares/auth');
-const NotFoundError = require('./errors/NotFoundError');
+// const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
 
@@ -31,9 +31,9 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use('*', (req, res, next) => {
-  // res.status(notFoundStatus).send({ message: "Такой старницы не существует" });
-  next(new NotFoundError({ message: 'Такой старницы не существует' }));
+app.use('*', (req, res) => {
+  res.status(notFoundStatus).send({ message: 'Такой старницы не существует' });
+  // next(new NotFoundError({ message: 'Такой старницы не существует' }));
 });
 
 app.use(errors());
